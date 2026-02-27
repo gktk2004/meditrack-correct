@@ -8,11 +8,11 @@ xampp{% extends 'doctor/doctor_index.html' %}
         background: white;
         padding: 35px;
         border-radius: 16px;
-        box-shadow: 0 6px 25px rgba(0,0,0,0.1);
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
         animation: fadeIn 0.4s ease-in-out;
     }
 
-    
+
 
     .request-title {
         font-weight: 700;
@@ -26,14 +26,18 @@ xampp{% extends 'doctor/doctor_index.html' %}
         color: #1D3557;
     }
 
-    .form-control, select, textarea {
+    .form-control,
+    select,
+    textarea {
         border-radius: 10px !important;
         padding: 12px;
         border: 1px solid #ced4da;
         transition: 0.3s;
     }
 
-    .form-control:focus, select:focus, textarea:focus {
+    .form-control:focus,
+    select:focus,
+    textarea:focus {
         border-color: #457B9D !important;
         box-shadow: 0 0 5px rgba(0, 119, 182, 0.4);
     }
@@ -63,8 +67,15 @@ xampp{% extends 'doctor/doctor_index.html' %}
     }
 
     @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 </style>
 
@@ -73,9 +84,9 @@ xampp{% extends 'doctor/doctor_index.html' %}
     <h2 class="request-title">Request Blood</h2>
 
     {% if messages %}
-        {% for msg in messages %}
-            <div class="alert alert-info">{{ msg }}</div>
-        {% endfor %}
+    {% for msg in messages %}
+    <div class="alert alert-info">{{ msg }}</div>
+    {% endfor %}
     {% endif %}
 
     <form method="POST">
@@ -86,10 +97,14 @@ xampp{% extends 'doctor/doctor_index.html' %}
             <label class="form-label">Blood Group</label>
             <select name="blood_group" class="form-control" required>
                 <option value="">-- Select Blood Group --</option>
-                <option value="A+">A+</option><option value="A-">A-</option>
-                <option value="B+">B+</option><option value="B-">B-</option>
-                <option value="AB+">AB+</option><option value="AB-">AB-</option>
-                <option value="O+">O+</option><option value="O-">O-</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
             </select>
         </div>
 
@@ -110,18 +125,6 @@ xampp{% extends 'doctor/doctor_index.html' %}
             </select>
         </div>
 
-        <!-- Donation Type -->
-        <div class="mb-3">
-            <label class="form-label">Donation Type</label>
-            <select name="donation_type" class="form-control" required>
-                <option value="">-- Select Donation Type --</option>
-                <option value="Whole Blood">Whole Blood</option>
-                <option value="Red Cells">Red Cells</option>
-                <option value="Plasma">Plasma</option>
-                <option value="Platelets">Platelets</option>
-            </select>
-        </div>
-
         <!-- ⭐ Donation Date (NEW FIELD) -->
         <div class="mb-3">
             <label class="form-label">Preferred Donation Date</label>
@@ -139,12 +142,12 @@ xampp{% extends 'doctor/doctor_index.html' %}
 </div>
 
 <script>
-    setTimeout(function() {
+    setTimeout(function () {
         let alerts = document.querySelectorAll('.alert');
-        alerts.forEach(function(alert) {
+        alerts.forEach(function (alert) {
             alert.style.transition = "0.5s";
             alert.style.opacity = "0";
-            setTimeout(() => alert.remove(), 500); 
+            setTimeout(() => alert.remove(), 500);
         });
     }, 3000);
 </script>

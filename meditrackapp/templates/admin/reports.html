@@ -33,7 +33,8 @@
         border-bottom: 1px solid rgba(255, 255, 255, 0.12);
         margin-bottom: 8px;
     }
-    h4{
+
+    h4 {
         color: #fff;
         font-size: 1.72rem;
         font-weight: 700;
@@ -336,7 +337,6 @@
                         <th>Doctor</th>
                         <th>Blood Group</th>
                         <th>Units</th>
-                        <th>Type</th>
                         <th>Status</th>
                         <th>Location</th>
                         <th>Date</th>
@@ -349,7 +349,6 @@
                         <td>{{ r.doctor.name }}</td>
                         <td>{{ r.blood_group }}</td>
                         <td>{{ r.units_required }}</td>
-                        <td>{{ r.donation_type }}</td>
                         <td>
                             {% if r.status == "approved" %}<span class="badge bg-success">Approved</span>
                             {% elif r.status == "pending" %}<span class="badge bg-warning text-dark">Pending</span>
@@ -412,7 +411,6 @@
                         <th>#</th>
                         <th>Donor</th>
                         <th>Blood Group</th>
-                        <th>Type</th>
                         <th>Units</th>
                         <th>Location</th>
                         <th>Donation Date</th>
@@ -424,7 +422,6 @@
                         <td>{{ forloop.counter }}</td>
                         <td>{{ dr.donor.user.username }}</td>
                         <td>{{ dr.donor.blood_group }}</td>
-                        <td>{{ dr.donation_type }}</td>
                         <td>{{ dr.units }}</td>
                         <td>{{ dr.location }}</td>
                         <td>{{ dr.donation_date|date:"Y-m-d" }}</td>
