@@ -1,0 +1,456 @@
+{% extends 'admin/admin_index.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    body {
+        background: #f5f2fa;
+    }
+
+    /* ── Layout ── */
+    .reports-wrapper {
+        display: flex;
+        gap: 0;
+        min-height: calc(100vh - 70px);
+    }
+
+    /* ── Sidebar ── */
+    .report-sidebar {
+        width: 230px;
+        flex-shrink: 0;
+        background: #2A9D8F;
+        border-radius: 0 0 0 0;
+        padding: 24px 0;
+    }
+
+    .report-sidebar h6 {
+        color: #c9b8e8;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        padding: 0 18px 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        margin-bottom: 8px;
+    }
+    h4{
+        color: #fff;
+        font-size: 1.72rem;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        padding: 0 18px 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        margin-bottom: 8px;
+    }
+
+    .report-sidebar .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #d6c5f0;
+        font-weight: 500;
+        font-size: 0.92rem;
+        padding: 11px 18px;
+        border-left: 3px solid transparent;
+        transition: 0.2s;
+        cursor: pointer;
+    }
+
+    .report-sidebar .nav-link:hover,
+    .report-sidebar .nav-link.active {
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+        border-left-color: #a78bfa;
+    }
+
+    .report-sidebar .nav-link .icon {
+        font-size: 1.1rem;
+    }
+
+    /* ── Main Content ── */
+    .report-main {
+        flex: 1;
+        padding: 28px 32px;
+        overflow-x: auto;
+    }
+
+    /* Summary Cards */
+    .info-card {
+        background: #fff;
+        padding: 20px;
+        border-radius: 14px;
+        text-align: center;
+        box-shadow: 0 3px 10px rgba(42, 157, 143, 0.10);
+        transition: .25s;
+    }
+
+    .info-card:hover {
+        transform: translateY(-4px);
+    }
+
+    .info-number {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #2A9D8F;
+    }
+
+    .info-title {
+        font-size: 0.85rem;
+        margin-top: 8px;
+        font-weight: 600;
+        color: #2A9D8F;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Filter */
+    .filter-box {
+        background: #fff;
+        border-radius: 10px;
+        padding: 14px 18px;
+        box-shadow: 0 3px 10px rgba(42, 157, 143, 0.08);
+        margin-bottom: 22px;
+    }
+
+    .btn-filter {
+        background: #2A9D8F;
+        color: #fff;
+        border: none;
+        border-radius: 7px;
+        padding: 8px 16px;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .btn-filter:hover {
+        background: #238276;
+    }
+
+    /* Section heading */
+    .section-heading {
+        color: #2A9D8F;
+        font-weight: 800;
+        font-size: 1.25rem;
+        margin-bottom: 18px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #b2e0da;
+    }
+
+    /* Table */
+    .custom-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 8px;
+    }
+
+    .custom-table thead th {
+        background: #2A9D8F;
+        color: #fff;
+        padding: 11px 12px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 0.88rem;
+    }
+
+    .custom-table tbody tr {
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(42, 157, 143, 0.08);
+    }
+
+    .custom-table td {
+        padding: 11px 12px;
+        text-align: center;
+        font-size: 0.9rem;
+    }
+
+    .custom-table tbody tr:hover {
+        background: #f3ecff;
+        transition: 0.15s;
+    }
+
+    .empty-row td {
+        color: #aaa;
+        font-style: italic;
+    }
+
+    /* Panels */
+    .report-panel {
+        display: none;
+    }
+
+    .report-panel.active {
+        display: block;
+    }
+</style>
+
+<div class="reports-wrapper">
+
+    <!-- ── SIDEBAR ── -->
+    <div class="report-sidebar">
+        <h4>Reports</h4>
+        <a class="nav-link active" onclick="showPanel('summary', this)">
+            <span class="icon"></span> Summary
+        </a>
+        <a class="nav-link" onclick="showPanel('appointments', this)">
+            <span class="icon"></span> Appointment Summary
+        </a>
+        <a class="nav-link" onclick="showPanel('feedback', this)">
+            <span class="icon"></span> Feedback Summary
+        </a>
+        <a class="nav-link" onclick="showPanel('blood-requests', this)">
+            <span class="icon"></span> Blood Requests
+        </a>
+        <a class="nav-link" onclick="showPanel('donor-acceptances', this)">
+            <span class="icon"></span> Donor Acceptance
+        </a>
+        <a class="nav-link" onclick="showPanel('donation-records', this)">
+            <span class="icon"></span> Donation Records
+        </a>
+    </div>
+
+    <!-- ── MAIN ── -->
+    <div class="report-main">
+
+        <!-- Date Filter (always visible) -->
+        <div class="filter-box">
+            <form method="GET" class="row g-2 align-items-end">
+                <div class="col-auto">
+                    <label class="form-label mb-1 fw-semibold small">From</label>
+                    <input type="date" name="from" class="form-control form-control-sm" value="{{ request.GET.from }}">
+                </div>
+                <div class="col-auto">
+                    <label class="form-label mb-1 fw-semibold small">To</label>
+                    <input type="date" name="to" class="form-control form-control-sm" value="{{ request.GET.to }}">
+                </div>
+                <div class="col-auto">
+                    <button class="btn-filter">Apply Filter</button>
+                </div>
+                {% if request.GET.from or request.GET.to %}
+                <div class="col-auto">
+                    <a href="{% url 'admin_reports' %}" class="btn btn-sm btn-outline-secondary">Clear</a>
+                </div>
+                {% endif %}
+            </form>
+        </div>
+
+        <!-- ── PANEL: SUMMARY ── -->
+        <div id="panel-summary" class="report-panel active">
+            <p class="section-heading">Overview</p>
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <div class="info-number">{{ total_appointments }}</div>
+                        <div class="info-title">Total Appointments</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <div class="info-number">{{ total_feedbacks }}</div>
+                        <div class="info-title">Feedback Received</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <div class="info-number">{{ total_doctors }}</div>
+                        <div class="info-title">Approved Doctors</div>
+                    </div>
+                </div>
+            </div>
+            <p class="text-muted small">Select a report from the sidebar to view detailed data.</p>
+        </div>
+
+        <!-- ── PANEL: APPOINTMENTS ── -->
+        <div id="panel-appointments" class="report-panel">
+            <p class="section-heading">Appointment Summary</p>
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Doctor</th>
+                        <th>Patient</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in appointment_list %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ a.doctor.name }}</td>
+                        <td>{{ a.user.username }}</td>
+                        <td>{{ a.date }}</td>
+                        <td>{{ a.status|capfirst }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr class="empty-row">
+                        <td colspan="5">No appointments found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ── PANEL: FEEDBACK ── -->
+        <div id="panel-feedback" class="report-panel">
+            <p class="section-heading">Feedback Summary</p>
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Doctor</th>
+                        <th>Patient</th>
+                        <th>Stars</th>
+                        <th>Interaction</th>
+                        <th>Service</th>
+                        <th>Comments</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fb in feedback_list %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ fb.appointment.doctor.name }}</td>
+                        <td>{{ fb.appointment.user.username }}</td>
+                        <td>{{ fb.star_rating }} </td>
+                        <td>{{ fb.doctor_interaction_rating }}/5</td>
+                        <td>{{ fb.hospital_service_rating }}/5</td>
+                        <td>{{ fb.comments|default:"—" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr class="empty-row">
+                        <td colspan="7">No feedback found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ── PANEL: BLOOD REQUESTS ── -->
+        <div id="panel-blood-requests" class="report-panel">
+            <p class="section-heading">Blood Requests</p>
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Doctor</th>
+                        <th>Blood Group</th>
+                        <th>Units</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Location</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in blood_requests %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ r.doctor.name }}</td>
+                        <td>{{ r.blood_group }}</td>
+                        <td>{{ r.units_required }}</td>
+                        <td>{{ r.donation_type }}</td>
+                        <td>
+                            {% if r.status == "approved" %}<span class="badge bg-success">Approved</span>
+                            {% elif r.status == "pending" %}<span class="badge bg-warning text-dark">Pending</span>
+                            {% else %}<span class="badge bg-danger">Rejected</span>{% endif %}
+                        </td>
+                        <td>{{ r.location }}</td>
+                        <td>{{ r.created_at|date:"Y-m-d" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr class="empty-row">
+                        <td colspan="8">No blood requests found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ── PANEL: DONOR ACCEPTANCES ── -->
+        <div id="panel-donor-acceptances" class="report-panel">
+            <p class="section-heading">Donor Acceptance</p>
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Donor</th>
+                        <th>Blood Group</th>
+                        <th>Request ID</th>
+                        <th>Status</th>
+                        <th>Accepted At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for d in donor_acceptances %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ d.donor.user.username }}</td>
+                        <td>{{ d.donor.blood_group }}</td>
+                        <td>#{{ d.request.id }}</td>
+                        <td>
+                            {% if d.status == "completed" %}<span class="badge bg-success">Completed</span>
+                            {% else %}<span class="badge bg-primary">Accepted</span>{% endif %}
+                        </td>
+                        <td>{{ d.accepted_at|date:"Y-m-d" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr class="empty-row">
+                        <td colspan="6">No donor acceptances found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ── PANEL: DONATION RECORDS ── -->
+        <div id="panel-donation-records" class="report-panel">
+            <p class="section-heading">Donation Records</p>
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Donor</th>
+                        <th>Blood Group</th>
+                        <th>Type</th>
+                        <th>Units</th>
+                        <th>Location</th>
+                        <th>Donation Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dr in donation_records %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ dr.donor.user.username }}</td>
+                        <td>{{ dr.donor.blood_group }}</td>
+                        <td>{{ dr.donation_type }}</td>
+                        <td>{{ dr.units }}</td>
+                        <td>{{ dr.location }}</td>
+                        <td>{{ dr.donation_date|date:"Y-m-d" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr class="empty-row">
+                        <td colspan="7">No donation records found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div><!-- /report-main -->
+</div><!-- /reports-wrapper -->
+
+<script>
+    function showPanel(name, el) {
+        // hide all panels
+        document.querySelectorAll('.report-panel').forEach(p => p.classList.remove('active'));
+        // deactivate all links
+        document.querySelectorAll('.report-sidebar .nav-link').forEach(a => a.classList.remove('active'));
+        // show selected
+        document.getElementById('panel-' + name).classList.add('active');
+        el.classList.add('active');
+    }
+</script>
+
+{% endblock %}

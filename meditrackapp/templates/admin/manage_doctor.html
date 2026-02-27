@@ -1,0 +1,98 @@
+{% extends 'admin/admin_index.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #f5f6fa;
+    color: #333;
+  }
+
+  .dashboard-title {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    text-align: center;
+    font-weight: 700;
+    color: #2A9D8F;
+  }
+
+  .card {
+    border: none;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    background: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+    padding-top: 25px;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  /* ICON STYLE */
+  .card-icon {
+    font-size: 60px;
+    color: #2A9D8F;
+    margin-bottom: 15px;
+  }
+
+  .btn-custom {
+    background-color: #2A9D8F;
+    border: none;
+    color: #fff;
+  }
+
+  .btn-custom:hover {
+    background-color: #2A9D8F;
+  }
+</style>
+
+<div class="container"><BR><BR><BR>
+  <!-- <h2 class="dashboard-title">Admin Dashboard</h2> -->
+
+  <div class="row">
+
+    <!-- Add Doctors -->
+    <div class="col-md-4">
+      <div class="card text-center">
+        <div class="card-body">
+          <i class="fa-solid fa-user-plus fa-3x mb-3" style="color:#2A9D8F;"></i>
+          <h5 class="card-title">Add Doctors</h5>
+          <p class="card-text">Add new doctors to the system.</p>
+          <a href="{% url 'add_doctor' %}" class="btn btn-custom w-100">Add Doctors</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Doctors -->
+    <div class="col-md-4">
+      <div class="card text-center">
+        <div class="card-body">
+          <i class="fa-solid fa-user-doctor fa-3x mb-3" style="color:#2A9D8F;"></i>
+          <h5 class="card-title">View Doctors</h5>
+          <p class="card-text">View all doctors.</p>
+          <a href="{% url 'view_approved_doctors' %}" class="btn btn-custom w-100">View Doctors</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Remove Doctors -->
+    <div class="col-md-4">
+      <div class="card text-center">
+        <div class="card-body">
+          <i class="fa-solid fa-user-minus fa-3x mb-3" style="color:#2A9D8F;"></i>
+          <h5 class="card-title">Remove Doctors</h5>
+          <p class="card-text">Remove doctors from the system.</p>
+          <a href="{% url 'remove_doctors' %}" class="btn btn-custom w-100">Remove Doctors</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

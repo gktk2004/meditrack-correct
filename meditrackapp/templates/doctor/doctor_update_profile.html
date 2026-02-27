@@ -1,0 +1,117 @@
+{% extends 'doctor/doctor_index.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+.text-primary { color: #457B9D !important; }
+.btn-primary { background-color: #457B9D !important; border-color: #457B9D !important; }
+.btn-primary:hover { background-color: #3A6682 !important; }
+.border-theme { border-color: #457B9D !important; }
+input:focus { border-color: #457B9D !important; box-shadow: 0 0 0 0.2rem rgba(0,119,182,.25)!important; }
+.alert.fade-out { opacity:0; transition:opacity .5s ease-out; }
+</style>
+
+<div class="container py-5" style="max-width:700px;">
+  <h2 class="text-center mb-4 text-primary fw-bold">Update Profile</h2>
+
+  <!-- Messages -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show border-theme">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <form method="POST" enctype="multipart/form-data"
+        class="shadow p-4 rounded bg-white border border-theme">
+    {% csrf_token %}
+
+    <!-- Qualification -->
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Qualification</label>
+      <input type="text" name="qualification" class="form-control"
+             value="{{ doctor.qualification|default:'' }}">
+    </div>
+
+    <!-- Experience -->
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Experience</label>
+      <input type="text" name="experience" class="form-control"
+             value="{{ doctor.experience|default:'' }}">
+    </div>
+
+    <!-- Profile Image -->
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Profile Image</label>
+      <input type="file" name="image" class="form-control">
+      {% if doctor.image %}
+        <img src="{{ doctor.image.url }}" width="120"
+             class="mt-3 rounded-circle border border-3 border-theme shadow-sm">
+      {% endif %}
+    </div>
+
+    <!-- ID Image -->
+    <div class="mb-3">
+      <label class="form-label fw-semibold">ID Image</label>
+      <input type="file" name="id_image" class="form-control">
+      {% if doctor.id_image %}
+        <img src="{{ doctor.id_image.url }}" width="120"
+             class="mt-3 rounded-3 border border-3 border-theme shadow-sm">
+      {% endif %}
+    </div>
+
+    <!-- Working Days -->
+    <div class="mb-3">
+      <label class="form-label fw-semibold d-block mb-2">Select Working Days</label>
+      <div class="border rounded p-3 bg-light border-theme">
+        {% for value, label in doctor.DAYS_OF_WEEK %}
+          <div class="form-check form-check-inline mb-2">
+            <input class="form-check-input border-theme"
+                   type="checkbox"
+                   name="working_days"
+                   value="{{ value }}"
+                   {% if value in working_days %}checked{% endif %}>
+            <label class="form-check-label">{{ label }}</label>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Token Limits -->
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Token Limits</label>
+      <div class="border rounded p-3 bg-light border-theme">
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <label class="form-label small">Morning</label>
+            <input type="number" name="morning_token_limit" class="form-control"
+                   value="{{ doctor.morning_token_limit }}" min="1" required>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label small">Afternoon</label>
+            <input type="number" name="afternoon_token_limit" class="form-control"
+                   value="{{ doctor.afternoon_token_limit }}" min="1" required>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button type="submit" class="btn btn-primary px-5 py-2 fw-semibold">
+        Update Profile
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+setTimeout(()=>{
+  document.querySelectorAll('.alert').forEach(alert=>{
+    alert.classList.add('fade-out');
+    setTimeout(()=>alert.remove(),500);
+  });
+},5000);
+</script>
+{% endblock %}
