@@ -376,7 +376,7 @@ class AppointmentBookingView(APIView):
             date=date, 
             time_slot=time_slot
         ).aggregate(Max('token_number'))['token_number__max']
-        next_token = (last_token or 0) + 1
+        next_token = int(last_token or 0) + 1
 
         # ✅ Create appointment
         appointment = Appointment.objects.create(
@@ -439,7 +439,7 @@ class CardPaymentView(APIView):
                 date=appointment.date,
                 time_slot=appointment.time_slot
             ).aggregate(Max('token_number'))['token_number__max']
-            next_token = (last_token or 0) + 1
+            next_token = int(last_token or 0) + 1
             appointment.token_number = next_token
         else:
             next_token = appointment.token_number
@@ -505,7 +505,7 @@ class UPIPaymentView(APIView):
                 date=appointment.date,
                 time_slot=appointment.time_slot
             ).aggregate(Max('token_number'))['token_number__max']
-            next_token = (last_token or 0) + 1
+            next_token = int(last_token or 0) + 1
             appointment.token_number = next_token
         else:
             next_token = appointment.token_number
